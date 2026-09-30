@@ -28,7 +28,6 @@ import { SpeakerButton } from '../components/SpeakerButton.tsx'
 import { buttonClass } from '../components/buttonClass.ts'
 import { Button, Dialog, Stars } from '../components/ui.tsx'
 
-const PRAISE = ['答对啦！', '真厉害！', '你太棒了！', '完全正确！']
 const COMFORT = ['再看一看', '没关系，记住它', '下次就熟悉了']
 
 interface QuizState {
@@ -240,21 +239,34 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
   const speechText = asking ? spokenQuestion(shown.a, shown.b) : spokenRhyme(shown.a, shown.b)
   const backTo = kind === 'practice' ? '/practice' : '/challenge'
 
-  const cheerLine = state.session.reviewingCorrect
-    ? `${rhyme(shown.a, shown.b)}，得 1 颗星`
-    : `${rhyme(shown.a, shown.b)}，再记一记`
+  const correctLine = `答对啦！${rhyme(shown.a, shown.b)}，得 1 颗星`
+  const comfortLine = COMFORT[(state.session.answered - 1) % COMFORT.length]
+  const progressMax = timed && level ? level.seconds * 1000 : roundSize
+  const progressValue = timed && level ? level.seconds * 1000 - remainingMs : questionNumber
+  const progressPct = progressMax <= 0 ? 0 : Math.max(8, Math.min(100, (progressValue / progressMax) * 100))
 
   return (
-    <div className="flex flex-col gap-3">
-      <header className="flex items-center justify-between gap-2">
-        <button type="button" className="min-h-11 cursor-pointer rounded-full px-1 text-base font-extrabold" onClick={() => setLeaveOpen(true)}>
-          ‹ 返回
+    <div className="flex flex-col gap-2" style={!asking ? { paddingBottom: '10rem' } : undefined}>
+      <header className="flex items-center gap-2">
+        <button type="button" className="close-round" aria-label="关闭" onClick={() => setLeaveOpen(true)}>
+          <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
+            <path d="M7 7l10 10M17 7 7 17" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+          </svg>
         </button>
-        <p className="display text-[1.55rem]">
-          {timed ? `${Math.ceil(remainingMs / 1000)} 秒` : `第 ${questionNumber} 题`}
-          {!timed && roundSize > 0 ? <span className="text-[1.05rem]"> / {roundSize}</span> : null}
+        <div
+          className="quiz-track"
+          role="progressbar"
+          aria-label="答题进度"
+          aria-valuenow={Math.round(progressValue)}
+          aria-valuemin={0}
+          aria-valuemax={Math.max(1, progressMax)}
+        >
+          <span style={{ width: `${progressPct}%` }} />
+        </div>
+        <p className="shrink-0 text-[0.92rem] font-bold text-[#3a2d5c]">
+          {timed ? `${Math.ceil(remainingMs / 1000)} 秒` : `第 ${questionNumber} 题${roundSize > 0 ? ` / ${roundSize}` : ''}`}
         </p>
-        <p className="star-chip text-base" aria-label={`答对 ${state.session.correctCount}`}>
+        <p className="star-chip shrink-0 px-2 text-base" aria-label={`答对 ${state.session.correctCount}`}>
           <svg viewBox="0 0 24 24" className="h-6 w-6 fill-[#ffc857]" aria-hidden="true">
             <path d="m12 2.5 2.5 6.2 6.6.6-5 4.3 1.5 6.4L12 16.7 6.4 20l1.5-6.4-5-4.3 6.6-.6Z" />
           </svg>
@@ -263,23 +275,20 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
       </header>
 
       <div className="flex items-end gap-1">
-        <FoxImage mood={asking || !state.session.reviewingCorrect ? 'think' : 'cheer'} className="w-36" />
-        <div className="mb-3 min-w-0 flex-1">
-          <p className="speech-bubble px-3 py-2 text-center text-base font-black leading-snug">
-            {asking ? '这道题你一定行！' : state.session.reviewingCorrect ? '答对啦！' : '再看一看'}
-          </p>
+        <FoxImage mood={asking || !state.session.reviewingCorrect ? 'think' : 'cheer'} className="w-[50vw] max-w-[12.5rem]" />
+        <div className="mb-2 flex min-w-0 flex-1 flex-col items-stretch gap-2">
+          {asking ? <p className="speech-bubble speech-side px-3 py-2 text-center text-base font-black leading-snug">这道题你一定行！</p> : <span className="h-2" />}
+          <div className="self-end">
+            <SpeakerButton text={speechText} enabled={data.speechOn} size="md" tone="blue" />
+          </div>
         </div>
-        <SpeakerButton text={speechText} enabled={data.speechOn} size="md" tone="lilac" />
       </div>
 
-      <div className="quiz-card px-4 py-5">
-        <p className="display text-6xl leading-none">
-          {shown.a} × {shown.b}
-        </p>
-        <p className="mt-3 text-xl font-extrabold">{asking ? '等于多少？' : equationText(shown.a, shown.b)}</p>
-      </div>
+      <p className="quiz-eq">
+        {shown.a} × {shown.b} = {asking ? '?' : product}
+      </p>
 
-      <div className="mt-4 flex-1">
+      <div>
         {asking && answerMode === 'input' ? (
           <div className={`mb-4 grid min-h-20 place-items-center rounded-[1.6rem] bg-white text-5xl font-black ${state.wiggle ? 'wiggle' : ''}`}>
             {state.draft || '?'}
@@ -287,8 +296,8 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
         ) : null}
         {asking && state.wiggle ? <p className="mb-3 text-center text-lg font-extrabold">先写一个数字</p> : null}
 
-        {asking && answerMode === 'choice' ? (
-          <ChoiceGrid choices={state.choices} disabled={false} picked={null} answer={product} onPick={submit} />
+        {answerMode === 'choice' ? (
+          <ChoiceGrid choices={state.choices} disabled={!asking} picked={asking ? null : state.picked} answer={product} onPick={submit} />
         ) : null}
         {asking && answerMode === 'input' ? (
           <NumberPad
@@ -303,37 +312,42 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
             onSubmit={submitDraft}
           />
         ) : null}
-
-        {!asking ? (
-          <div
-            role="status"
-            className={`rounded-[1.6rem] p-4 ${state.session.reviewingCorrect ? 'bg-[#b6f3d4]' : 'bg-[#ffd8c8]'}`}
-          >
-            <p className="text-3xl font-black">
-              {state.session.reviewingCorrect
-                ? PRAISE[(state.session.correctCount - 1) % PRAISE.length]
-                : COMFORT[(state.session.answered - 1) % COMFORT.length]}
-            </p>
-            <p className="mt-2 text-4xl font-black">{equationText(shown.a, shown.b)}</p>
-            <p className="mt-2 text-2xl font-extrabold">{rhyme(shown.a, shown.b)}</p>
-            {!state.session.reviewingCorrect && state.picked != null ? (
-              <p className="mt-2 text-lg font-bold">
-                {answerMode === 'choice' ? '你选的是' : '你写的是'} {state.picked}
-              </p>
-            ) : null}
-            {!state.session.reviewingCorrect && retry === 'now' ? <p className="mt-2 text-lg font-bold">我们马上再试一次</p> : null}
-            {!state.session.reviewingCorrect && retry === 'soon' ? <p className="mt-2 text-lg font-bold">这道题一会儿还会出现</p> : null}
-            <p className="follow-bar mt-3 text-base">{cheerLine}</p>
-            {!timed ? (
-              <Button className="mt-4 w-full" onClick={onContinue}>
-                {state.session.queue.length === 0 ? '看结果' : '继续'}
-              </Button>
-            ) : (
-              <p className="mt-3 text-base font-bold">马上下一题</p>
-            )}
-          </div>
-        ) : null}
       </div>
+
+      {!asking ? (
+        <div className="result-dock" role="status">
+          {state.session.reviewingCorrect ? (
+            <div className="ok-bar">
+              <FoxImage mood="cheer" className="w-12" />
+              <span className="ok-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" className="h-4 w-4">
+                  <path d="M5 12.5 9.2 17 19 7" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              <p className="min-w-0 flex-1 text-[0.95rem] font-black leading-snug">{correctLine}</p>
+            </div>
+          ) : (
+            <div className="soft-bar">
+              <p className="text-lg font-black">{comfortLine}</p>
+              <p className="mt-1 text-base font-extrabold">{rhyme(shown.a, shown.b)}，再记一记</p>
+              {state.picked != null ? (
+                <p className="mt-1 text-base font-bold">
+                  {answerMode === 'choice' ? '你选的是' : '你写的是'} {state.picked}
+                </p>
+              ) : null}
+              {retry === 'now' ? <p className="mt-1 text-base font-bold">我们马上再试一次</p> : null}
+              {retry === 'soon' ? <p className="mt-1 text-base font-bold">这道题一会儿还会出现</p> : null}
+            </div>
+          )}
+          {!timed ? (
+            <Button className="w-full" onClick={onContinue}>
+              {state.session.queue.length === 0 ? '看结果' : '继续'}
+            </Button>
+          ) : (
+            <p className="text-center text-base font-bold text-[#3a2d5c]">马上下一题</p>
+          )}
+        </div>
+      ) : null}
 
       <Dialog
         open={leaveOpen}

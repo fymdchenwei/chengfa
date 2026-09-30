@@ -7,6 +7,7 @@ const TONES = {
   lilac: 'bg-gradient-to-b from-[#e4d9ff] to-[#8b6cff] text-white shadow-[0_3px_0_#6a4de0]',
   pink: 'bg-gradient-to-b from-[#ffd0e4] to-[#ff5d8f] text-white shadow-[0_3px_0_#e23b6a]',
   sun: 'bg-gradient-to-b from-[#ffe98a] to-[#ffc44a] text-[#5a3a12] shadow-[0_3px_0_#e29a1e]',
+  blue: 'bg-gradient-to-b from-[#d7ecff] to-[#3d8bff] text-white shadow-[0_3px_0_#2a6ad4]',
 } as const
 
 export type SpeakerTone = keyof typeof TONES

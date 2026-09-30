@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { equationText, factId, type Fact } from '../domain/facts.ts'
+import { isIos, runningStandalone } from '../domain/platform.ts'
 import { LEVELS } from '../domain/levels.ts'
 import { rhyme, spokenRhyme } from '../domain/rhyme.ts'
 import { answerTotals, masteryLabel, masteryOf, summarizeMastery, weakFacts } from '../domain/srs.ts'
@@ -14,7 +15,7 @@ import { Button, Dialog, MasteryLegend, Stars } from '../components/ui.tsx'
 
 export function ProgressPage() {
   usePageTitle('进步')
-  const { data, setSound, setSpeech, resetProgress } = useProgress()
+  const { data, setSound, setSpeech, resetProgress, dismissTip } = useProgress()
   const summary = summarizeMastery(data.cards)
   const totals = answerTotals(data.cards)
   const weak = weakFacts(data.cards, 4)
@@ -22,13 +23,14 @@ export function ProgressPage() {
   const [confirmReset, setConfirmReset] = useState(false)
   const starCount = LEVELS.reduce((sum, level) => sum + (data.levels[level.id]?.stars ?? 0), 0)
   const pickedCard = picked ? data.cards[factId(picked.a, picked.b)] : undefined
+  const showTip = !data.tipDismissed && !runningStandalone()
 
   return (
     <div className="flex flex-col gap-4">
       <header className="flex items-center gap-3">
         <FoxImage mood={summary.mastered === 81 ? 'cheer' : summary.fresh === 81 ? 'think' : 'happy'} className="w-28" />
         <div>
-          <h1 className="text-4xl font-black">我的进步</h1>
+          <h1 className="bubble-title">我的进步</h1>
           <p className="text-lg font-bold text-muted">记录只在这台设备上</p>
         </div>
       </header>
@@ -98,6 +100,16 @@ export function ProgressPage() {
         <Toggle label="音效" on={data.soundOn} onToggle={() => setSound(!data.soundOn)} />
         <Toggle label="朗读" on={data.speechOn} onToggle={() => setSpeech(!data.speechOn)} />
       </section>
+
+      {showTip ? (
+        <button type="button" className="install-hint" onClick={dismissTip}>
+          <span>{isIos() ? '用 Safari 的分享，添加到主屏幕，离线也能练' : '用浏览器「添加到主屏幕」，离线也能练'}</span>
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-white text-base" aria-hidden="true">
+            ×
+          </span>
+          <span className="sr-only">关掉提示</span>
+        </button>
+      ) : null}
 
       <Link to="/voice" className={buttonClass('pink', 'lg', 'w-full')}>
         语音设置

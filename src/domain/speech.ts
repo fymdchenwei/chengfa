@@ -7,14 +7,25 @@ export interface VoiceInfo {
 export interface SpeechPrefs {
   voiceName: string
   rate: number
+  pitch: number
 }
 
 export const DEFAULT_SPEECH_RATE = 0.8
 export const SPEECH_RATE_MIN = 0.5
 export const SPEECH_RATE_MAX = 1.5
-export const SPEECH_PITCH = 1
+export const DEFAULT_SPEECH_PITCH = 1.05
+export const SPEECH_PITCH_MIN = 0.5
+export const SPEECH_PITCH_MAX = 2
 
-const prefs: SpeechPrefs = { voiceName: '', rate: DEFAULT_SPEECH_RATE }
+export type SpeechPresetId = 'fox' | 'bear' | 'kid'
+
+export const SPEECH_PRESETS: Record<SpeechPresetId, { rate: number; pitch: number }> = {
+  fox: { rate: 0.8, pitch: 1.05 },
+  bear: { rate: 0.7, pitch: 0.75 },
+  kid: { rate: 0.92, pitch: 1.28 },
+}
+
+const prefs: SpeechPrefs = { voiceName: '', rate: DEFAULT_SPEECH_RATE, pitch: DEFAULT_SPEECH_PITCH }
 
 export function getSpeechPrefs(): SpeechPrefs {
   return { ...prefs }
@@ -23,6 +34,26 @@ export function getSpeechPrefs(): SpeechPrefs {
 export function setSpeechPrefs(next: SpeechPrefs): void {
   prefs.voiceName = sanitizeSpeechVoice(next.voiceName)
   prefs.rate = normalizeSpeechRate(next.rate)
+  prefs.pitch = normalizeSpeechPitch(next.pitch)
+}
+
+export function normalizeSpeechPitch(value: unknown): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return DEFAULT_SPEECH_PITCH
+  const clamped = Math.min(SPEECH_PITCH_MAX, Math.max(SPEECH_PITCH_MIN, value))
+  return Math.round(clamped * 100) / 100
+}
+
+export function pickVoiceForPreset<T extends VoiceInfo>(voices: readonly T[], preset: SpeechPresetId): T | undefined {
+  const ranked = rankChineseVoices(voices)
+  if (preset === 'bear') {
+    const male = ranked.find((voice) => /male|男|yunyang|kangkang|liang/i.test(voice.name))
+    if (male) return male
+  }
+  if (preset === 'kid') {
+    const lively = ranked.find((voice) => /sin-?ji|child|kid|童/i.test(voice.name))
+    if (lively) return lively
+  }
+  return ranked[0]
 }
 
 export function sanitizeSpeechVoice(value: unknown): string {
@@ -153,7 +184,7 @@ function prepareUtterance(text: string, synth: SpeechSynthesis): SpeechSynthesis
   const utter = new SpeechSynthesisUtterance(text)
   utter.lang = 'zh-CN'
   utter.rate = current.rate
-  utter.pitch = SPEECH_PITCH
+  utter.pitch = current.pitch
   const voice = pickChineseVoice(synth.getVoices(), current.voiceName)
   if (voice) {
     utter.voice = voice as SpeechSynthesisVoice

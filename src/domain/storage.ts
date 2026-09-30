@@ -1,6 +1,8 @@
 import { LEVELS } from './levels.ts'
-import { normalizeSpeechRate, sanitizeSpeechVoice } from './speech.ts'
+import { normalizeSpeechPitch, normalizeSpeechRate, sanitizeSpeechVoice } from './speech.ts'
 import { createCard, type LevelRecord, type Mastery, type SrsCard } from './srs.ts'
+
+export type SpeechPresetStored = 'fox' | 'bear' | 'kid' | 'custom'
 
 export const STORAGE_KEY = 'chengfa-progress-v1'
 
@@ -12,6 +14,8 @@ export interface AppData {
   speechOn: boolean
   speechVoice: string
   speechRate: number
+  speechPitch: number
+  speechPreset: SpeechPresetStored
   tipDismissed: boolean
 }
 
@@ -29,8 +33,16 @@ export function defaultAppData(): AppData {
     speechOn: true,
     speechVoice: '',
     speechRate: normalizeSpeechRate(undefined),
+    speechPitch: normalizeSpeechPitch(undefined),
+    speechPreset: 'fox',
     tipDismissed: false,
   }
+}
+
+function sanitizeSpeechPreset(value: unknown, voice: string): SpeechPresetStored {
+  if (value === 'fox' || value === 'bear' || value === 'kid' || value === 'custom') return value
+  if (voice !== '') return 'custom'
+  return 'fox'
 }
 
 function isMastery(value: number): value is Mastery {
@@ -103,6 +115,8 @@ export function loadAppData(storage: KeyValueStore): AppData {
       speechOn: parsed.speechOn !== false,
       speechVoice: sanitizeSpeechVoice(parsed.speechVoice),
       speechRate: normalizeSpeechRate(parsed.speechRate),
+      speechPitch: normalizeSpeechPitch(parsed.speechPitch),
+      speechPreset: sanitizeSpeechPreset(parsed.speechPreset, sanitizeSpeechVoice(parsed.speechVoice)),
       tipDismissed: parsed.tipDismissed === true,
     }
   } catch {

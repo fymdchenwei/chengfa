@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { equationText } from '../domain/facts.ts'
+import { highlightFactor } from '../domain/home.ts'
 import { rhyme, spokenRhyme } from '../domain/rhyme.ts'
 import { speakSequence, stopSpeech } from '../domain/speech.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
 import { buttonClass } from '../components/buttonClass.ts'
 import { FoxImage } from '../components/FoxImage.tsx'
+import { IconNote } from '../components/icons.tsx'
 import { SoundWaves } from '../components/SoundWaves.tsx'
 import { useSpeaking } from '../hooks/useSpeaking.ts'
-import { SpeakerButton, type SpeakerTone } from '../components/SpeakerButton.tsx'
-
-const ROW_TONE = ['sun', 'mint', 'lilac', 'pink', 'sky'] as const
-const SPEAKER_TONE: SpeakerTone[] = ['sun', 'mint', 'lilac', 'pink', 'orange']
+import { SpeakerButton } from '../components/SpeakerButton.tsx'
 
 export function LearnRowPage() {
   const params = useParams()
@@ -23,8 +22,8 @@ export function LearnRowPage() {
   const { data } = useProgress()
   const speaking = useSpeaking()
   const [hint, setHint] = useState('')
-  const [rowState, setRowState] = useState({ n, active: valid ? n : 1 })
-  if (valid && rowState.n !== n) setRowState({ n, active: n })
+  const [rowState, setRowState] = useState({ n, active: valid ? highlightFactor(n, data.cards) : 1 })
+  if (valid && rowState.n !== n) setRowState({ n, active: highlightFactor(n, data.cards) })
   const active = rowState.active
 
   useEffect(() => () => stopSpeech(), [])
@@ -32,7 +31,7 @@ export function LearnRowPage() {
   if (!valid) {
     return (
       <div className="flex flex-col gap-4">
-        <h1 className="display text-4xl">没有这一行</h1>
+        <h1 className="bubble-title">没有这一行</h1>
         <p className="text-lg font-bold text-muted">口诀是从 1 到 9。</p>
         <Link to="/learn/1" className={buttonClass()}>
           返回口诀
@@ -44,13 +43,10 @@ export function LearnRowPage() {
   const lines = Array.from({ length: 9 }, (_, index) => spokenRhyme(n, index + 1))
 
   return (
-    <div className="flex flex-col gap-3" style={{ paddingBottom: '4.2rem' }}>
+    <div className="flex flex-col gap-2" style={{ paddingBottom: '2.6rem' }}>
       <header className="flex items-start justify-between gap-2">
-        <div className="min-w-0 pt-2">
-          <h1 className="display text-[2.15rem]">{n} 的口诀</h1>
-          <p className="mt-2 text-sm font-extrabold text-[#6d5a86]">点一点小喇叭，听狐狸唱</p>
-        </div>
-        <FoxImage mood="sing" className="-mr-2 w-40" />
+        <h1 className="bubble-title pt-1">{n} 的口诀</h1>
+        <FoxImage mood="sing" className="-mr-1 -mt-1 w-[26vw] max-w-[6.75rem]" />
       </header>
       <div className="grid grid-cols-9 gap-1" role="group" aria-label="选择哪一句口诀">
         {Array.from({ length: 9 }, (_, index) => {
@@ -75,19 +71,20 @@ export function LearnRowPage() {
       <ul className="grid gap-1.5">
         {Array.from({ length: 9 }, (_, index) => {
           const b = index + 1
-          const tone = ROW_TONE[index % ROW_TONE.length]
+          const on = active === b
           return (
-            <li key={b} className={`rhyme-row rhyme-${tone} ${active === b ? 'rhyme-on' : ''}`}>
-              <p className="shrink-0 whitespace-nowrap text-lg font-black leading-none tracking-tight">
-                {n}×{b}={n * b}
+            <li key={b} className={`rhyme-row ${on ? 'rhyme-on' : ''}`}>
+              {on ? <RowStars /> : null}
+              <p className="shrink-0 whitespace-nowrap text-[1.05rem] font-black leading-none">
+                {n} × {b} = {n * b}
               </p>
               <span className="rhyme-split" aria-hidden="true" />
-              <p className="min-w-0 flex-1 truncate text-lg font-black leading-none">{rhyme(n, b)}</p>
+              <p className="min-w-0 flex-1 truncate text-[1.05rem] font-black leading-none">{rhyme(n, b)}</p>
               <SpeakerButton
                 text={spokenRhyme(n, b)}
                 enabled={data.speechOn}
                 size="sm"
-                tone={SPEAKER_TONE[index % SPEAKER_TONE.length]}
+                tone={on ? 'orange' : 'blue'}
                 onDenied={setHint}
                 onPlay={() => setRowState({ n, active: b })}
               />
@@ -114,9 +111,23 @@ export function LearnRowPage() {
           }}
         >
           <SoundWaves active={speaking} />
-          {speaking ? '停止' : '跟着读'}
+          <span>{speaking ? '停止' : `跟着读：${rhyme(n, active)}`}</span>
+          <IconNote className="h-5 w-5" />
         </button>
       </div>
     </div>
+  )
+}
+
+function RowStars() {
+  return (
+    <span className="pointer-events-none" aria-hidden="true">
+      <svg viewBox="0 0 24 24" className="row-star row-star-a">
+        <path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8Z" />
+      </svg>
+      <svg viewBox="0 0 24 24" className="row-star row-star-b">
+        <path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8Z" />
+      </svg>
+    </span>
   )
 }

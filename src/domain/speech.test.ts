@@ -10,7 +10,9 @@ import {
   noteSpeechEnd,
   noteSpeechStart,
   noteSpeechStop,
+  normalizeSpeechPitch,
   pickChineseVoice,
+  pickVoiceForPreset,
   rankChineseVoices,
   sanitizeSpeechVoice,
   voiceScore,
@@ -78,6 +80,17 @@ describe('中文语音选择', () => {
     noteSpeechStart()
     noteSpeechStop()
     expect(isSpeaking()).toBe(false)
+  })
+
+  it('角色卡片按名字挑声音，音调收在可用范围', () => {
+    expect(pickVoiceForPreset(VOICES, 'fox')?.name).toBe('Tingting')
+    expect(pickVoiceForPreset(VOICES, 'kid')?.name).toBe('Sinji')
+    expect(pickVoiceForPreset(VOICES, 'bear')?.name).toBe('Tingting')
+    const withMale = [...VOICES, { name: 'Yunyang', lang: 'zh-CN', localService: true }]
+    expect(pickVoiceForPreset(withMale, 'bear')?.name).toBe('Yunyang')
+    expect(normalizeSpeechPitch(undefined)).toBe(1.05)
+    expect(normalizeSpeechPitch(0.1)).toBe(0.5)
+    expect(normalizeSpeechPitch(3)).toBe(2)
   })
 
   it('给声音和语速配上孩子能懂的说明', () => {

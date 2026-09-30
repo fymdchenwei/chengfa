@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { factId } from './domain/facts.ts'
 import { applyAnswer, createCard, mergeLevelResult, type Mastery, type SrsCard } from './domain/srs.ts'
-import { normalizeSpeechRate, sanitizeSpeechVoice, setSpeechPrefs } from './domain/speech.ts'
+import { normalizeSpeechPitch, normalizeSpeechRate, sanitizeSpeechVoice, setSpeechPrefs, SPEECH_PRESETS, type SpeechPresetId } from './domain/speech.ts'
 import { loadAppData, saveAppData, type AppData, type KeyValueStore } from './domain/storage.ts'
 import { ProgressContext } from './progress-context.ts'
 
@@ -28,7 +28,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     saveAppData(store, data)
-    setSpeechPrefs({ voiceName: data.speechVoice, rate: data.speechRate })
+    setSpeechPrefs({ voiceName: data.speechVoice, rate: data.speechRate, pitch: data.speechPitch })
   }, [store, data])
 
   const recordAnswer = useCallback((a: number, b: number, correct: boolean) => {
@@ -62,16 +62,31 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   const setSpeechVoice = useCallback((name: string) => {
     setData((prev) => {
-      const next = { ...prev, speechVoice: sanitizeSpeechVoice(name) }
-      setSpeechPrefs({ voiceName: next.speechVoice, rate: next.speechRate })
+      const next = { ...prev, speechVoice: sanitizeSpeechVoice(name), speechPreset: 'custom' as const }
+      setSpeechPrefs({ voiceName: next.speechVoice, rate: next.speechRate, pitch: next.speechPitch })
       return next
     })
   }, [])
 
   const setSpeechRate = useCallback((rate: number) => {
     setData((prev) => {
-      const next = { ...prev, speechRate: normalizeSpeechRate(rate) }
-      setSpeechPrefs({ voiceName: next.speechVoice, rate: next.speechRate })
+      const next = { ...prev, speechRate: normalizeSpeechRate(rate), speechPreset: 'custom' as const }
+      setSpeechPrefs({ voiceName: next.speechVoice, rate: next.speechRate, pitch: next.speechPitch })
+      return next
+    })
+  }, [])
+
+  const setSpeechPreset = useCallback((preset: SpeechPresetId, voiceName: string) => {
+    setData((prev) => {
+      const chosen = SPEECH_PRESETS[preset]
+      const next = {
+        ...prev,
+        speechPreset: preset,
+        speechRate: normalizeSpeechRate(chosen.rate),
+        speechPitch: normalizeSpeechPitch(chosen.pitch),
+        speechVoice: sanitizeSpeechVoice(voiceName),
+      }
+      setSpeechPrefs({ voiceName: next.speechVoice, rate: next.speechRate, pitch: next.speechPitch })
       return next
     })
   }, [])
@@ -86,7 +101,18 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   return (
     <ProgressContext.Provider
-      value={{ data, recordAnswer, recordLevel, setSound, setSpeech, setSpeechVoice, setSpeechRate, dismissTip, resetProgress }}
+      value={{
+        data,
+        recordAnswer,
+        recordLevel,
+        setSound,
+        setSpeech,
+        setSpeechVoice,
+        setSpeechRate,
+        setSpeechPreset,
+        dismissTip,
+        resetProgress,
+      }}
     >
       {children}
     </ProgressContext.Provider>

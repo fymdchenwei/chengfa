@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+import type { SpeechPresetId } from './domain/speech.ts'
 import type { Mastery } from './domain/srs.ts'
 import type { AppData } from './domain/storage.ts'
 
@@ -10,6 +11,7 @@ export interface ProgressApi {
   setSpeech: (on: boolean) => void
   setSpeechVoice: (name: string) => void
   setSpeechRate: (rate: number) => void
+  setSpeechPreset: (preset: SpeechPresetId, voiceName: string) => void
   dismissTip: () => void
   resetProgress: () => void
 }

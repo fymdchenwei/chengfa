@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { passedLevelCount, suggestTable, totalStars } from './home.ts'
+import { highlightFactor, passedLevelCount, suggestTable, totalStars } from './home.ts'
 import { createCard } from './srs.ts'
 
 describe('suggestTable', () => {
@@ -16,6 +16,22 @@ describe('suggestTable', () => {
       cards[`1x${b}`] = card
     }
     expect(suggestTable(cards)).toBe(2)
+  })
+})
+
+describe('highlightFactor', () => {
+  it('没练过时高亮第 4 行', () => {
+    expect(highlightFactor(3, {})).toBe(4)
+  })
+
+  it('高亮这一行里最近练过的乘数', () => {
+    const older = createCard(3, 4)
+    older.correct = 1
+    older.dueAt = 10
+    const newer = createCard(3, 7)
+    newer.correct = 1
+    newer.dueAt = 50
+    expect(highlightFactor(3, { '3x4': older, '3x7': newer })).toBe(7)
   })
 })
 
