@@ -8,7 +8,7 @@ import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
 import { FactGrid } from '../components/FactGrid.tsx'
 import { buttonClass } from '../components/buttonClass.ts'
-import { Mascot } from '../components/Mascot.tsx'
+import { FoxImage } from '../components/FoxImage.tsx'
 import { SpeakerButton } from '../components/SpeakerButton.tsx'
 import { Button, Dialog, MasteryLegend, Stars } from '../components/ui.tsx'
 
@@ -26,7 +26,7 @@ export function ProgressPage() {
   return (
     <div className="flex flex-col gap-4">
       <header className="flex items-center gap-3">
-        <Mascot mood={summary.mastered === 81 ? 'cheer' : summary.fresh === 81 ? 'think' : 'happy'} />
+        <FoxImage mood={summary.mastered === 81 ? 'cheer' : summary.fresh === 81 ? 'think' : 'happy'} className="w-28" />
         <div>
           <h1 className="text-4xl font-black">我的进步</h1>
           <p className="text-lg font-bold text-muted">记录只在这台设备上</p>

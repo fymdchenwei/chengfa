@@ -6,7 +6,7 @@ import { speakSequence, stopSpeech } from '../domain/speech.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
 import { buttonClass } from '../components/buttonClass.ts'
-import { Fox } from '../components/Fox.tsx'
+import { FoxImage } from '../components/FoxImage.tsx'
 import { SoundWaves } from '../components/SoundWaves.tsx'
 import { useSpeaking } from '../hooks/useSpeaking.ts'
 import { SpeakerButton, type SpeakerTone } from '../components/SpeakerButton.tsx'
@@ -50,7 +50,7 @@ export function LearnRowPage() {
           <h1 className="display text-[2.15rem]">{n} 的口诀</h1>
           <p className="mt-2 text-sm font-extrabold text-[#6d5a86]">点一点小喇叭，听狐狸唱</p>
         </div>
-        <Fox mood="sing" className="-mr-1 h-36 w-32" />
+        <FoxImage mood="sing" className="-mr-2 w-40" />
       </header>
       <div className="grid grid-cols-9 gap-1" role="group" aria-label="选择哪一句口诀">
         {Array.from({ length: 9 }, (_, index) => {

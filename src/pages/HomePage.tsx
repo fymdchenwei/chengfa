@@ -4,7 +4,7 @@ import { passedLevelCount, suggestTable, totalStars } from '../domain/home.ts'
 import { isIos, runningStandalone } from '../domain/platform.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
-import { Fox } from '../components/Fox.tsx'
+import { FoxImage } from '../components/FoxImage.tsx'
 
 export function HomePage() {
   usePageTitle('乘法乐园')
@@ -27,7 +27,7 @@ export function HomePage() {
       </header>
 
       <div className="flex flex-1 flex-col items-center justify-center pb-2">
-        <Fox mood="wave" className="h-64 w-52" />
+        <FoxImage mood="happy" className="w-[68vw] max-w-[17.5rem]" />
         <Link to={`/learn/${table}`} className="speech-bubble -mt-1 max-w-[17.5rem] px-4 py-3 text-center text-lg font-black leading-snug">
           今天我们一起练 {table} 的口诀吧！
         </Link>

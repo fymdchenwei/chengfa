@@ -4,6 +4,7 @@ import { ALL_TABLES, tableColor, type AnswerMode } from '../domain/facts.ts'
 import { readPracticeSetup, savePracticeSetup } from '../domain/practiceSetup.ts'
 import { practiceQuestionCount } from '../domain/startSession.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
+import { FoxImage } from '../components/FoxImage.tsx'
 import { Button } from '../components/ui.tsx'
 
 export function PracticePage() {
@@ -17,9 +18,12 @@ export function PracticePage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <header>
-        <h1 className="text-4xl font-black">做练习</h1>
-        <p className="mt-1 text-lg font-bold text-muted">答错的题目，过一会儿还会再出现</p>
+      <header className="flex items-center justify-between gap-2">
+        <div>
+          <h1 className="display text-[2rem]">做练习</h1>
+          <p className="mt-1 text-base font-bold text-muted">答错的题目，过一会儿还会再出现</p>
+        </div>
+        <FoxImage mood="think" className="w-28" />
       </header>
 
       <section>

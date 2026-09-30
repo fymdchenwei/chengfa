@@ -434,21 +434,6 @@ a {
     0 0 16px 3px rgb(122 92 255 / 0.95);
 }
 
-@keyframes fox-wave {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(-14deg);
-  }
-}
-
-.fox-wave {
-  transform-origin: 150px 180px;
-  animation: fox-wave 1.15s ease-in-out infinite;
-}
-
 @keyframes fox-bob {
   0%,
   100% {
@@ -591,8 +576,8 @@ a {
 
 .phone-tilt {
   position: absolute;
-  top: 36%;
-  right: 10%;
+  top: 34%;
+  right: -8%;
   z-index: 2;
   animation: phone-tilt 2.8s ease-in-out infinite;
 }

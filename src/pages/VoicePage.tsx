@@ -3,7 +3,7 @@ import { spokenRhyme } from '../domain/rhyme.ts'
 import { speakChinese } from '../domain/speech.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
-import { Fox } from '../components/Fox.tsx'
+import { FoxImage } from '../components/FoxImage.tsx'
 import { SpeechSettings } from '../components/SpeechSettings.tsx'
 
 export function VoicePage() {
@@ -18,7 +18,7 @@ export function VoicePage() {
           <h1 className="display text-[2rem]">朗读声音</h1>
           <p className="mt-2 text-sm font-extrabold text-[#6d5a86]">小狐狸在听</p>
         </div>
-        <Fox mood="headphones" className="-mr-1 h-36 w-32" />
+        <FoxImage mood="listen" className="-mr-2 w-40" />
       </header>
       <button
         type="button"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { needsRotatePrompt } from '../domain/platform.ts'
-import { Fox } from './Fox.tsx'
+import { FoxImage } from './FoxImage.tsx'
 
 const FLOATS = [
   { text: '×', className: 'left-[8%] top-[18%] text-4xl text-[#ff7a2e] rotate-delay-0' },
@@ -53,7 +53,7 @@ export function RotatePrompt() {
             </span>
           ))}
           <div className="relative">
-            <Fox mood="wave" className="h-72 w-56" />
+            <FoxImage mood="happy" className="w-64" />
             <div className="phone-tilt" aria-hidden="true">
               <div className="phone">
                 <div className="phone-screen">3×4</div>

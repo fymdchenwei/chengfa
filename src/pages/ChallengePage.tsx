@@ -2,6 +2,7 @@ import { Link } from 'react-router'
 import { isLevelUnlocked, LEVELS } from '../domain/levels.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
+import { FoxImage } from '../components/FoxImage.tsx'
 import { Stars } from '../components/ui.tsx'
 
 export function ChallengePage() {
@@ -11,9 +12,12 @@ export function ChallengePage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <header>
-        <h1 className="text-4xl font-black">闯关</h1>
-        <p className="mt-1 text-lg font-bold text-muted">拿到星星，就能打开下一关</p>
+      <header className="flex items-center justify-between gap-2">
+        <div>
+          <h1 className="display text-[2rem]">闯关</h1>
+          <p className="mt-1 text-base font-bold text-muted">拿到星星，就能打开下一关</p>
+        </div>
+        <FoxImage mood="cheer" className="w-28" />
       </header>
       <ul className="grid gap-3">
         {LEVELS.map((level, index) => {

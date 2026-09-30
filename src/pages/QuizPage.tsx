@@ -22,8 +22,7 @@ import {
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
 import { ChoiceGrid } from '../components/ChoiceGrid.tsx'
-import { Fox } from '../components/Fox.tsx'
-import { Mascot } from '../components/Mascot.tsx'
+import { FoxImage } from '../components/FoxImage.tsx'
 import { NumberPad } from '../components/NumberPad.tsx'
 import { SpeakerButton } from '../components/SpeakerButton.tsx'
 import { buttonClass } from '../components/buttonClass.ts'
@@ -264,7 +263,7 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
       </header>
 
       <div className="flex items-end gap-1">
-        <Fox mood={asking ? 'think' : state.session.reviewingCorrect ? 'cheer' : 'oops'} className="h-36 w-28" />
+        <FoxImage mood={asking || !state.session.reviewingCorrect ? 'think' : 'cheer'} className="w-36" />
         <div className="mb-3 min-w-0 flex-1">
           <p className="speech-bubble px-3 py-2 text-center text-base font-black leading-snug">
             {asking ? '这道题你一定行！' : state.session.reviewingCorrect ? '答对啦！' : '再看一看'}
@@ -378,7 +377,7 @@ function initialState(
 function Blocked({ title, body, to, action }: { title: string; body: string; to: string; action: string }) {
   return (
     <div className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center gap-4 px-5">
-      <Mascot mood="think" />
+      <FoxImage mood="think" className="w-36" />
       <h1 className="text-4xl font-black">{title}</h1>
       <p className="text-lg font-bold text-muted">{body}</p>
       <Link to={to} className={buttonClass()}>
@@ -422,7 +421,7 @@ function Summary({
 
   return (
     <div className="pop-in mx-auto flex min-h-dvh max-w-lg flex-col gap-4 px-4 py-6" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
-      <Mascot mood={mood} />
+      <FoxImage mood={mood} className="w-40" />
       <h1 className="text-4xl font-black">{timed && timeUp ? '时间到' : '这轮完成啦'}</h1>
       <p className="text-xl font-extrabold">{headline}</p>
       {session.answered > 0 && session.correctCount === session.answered ? <p className="text-lg font-bold text-muted">全部答对，太厉害了！</p> : null}

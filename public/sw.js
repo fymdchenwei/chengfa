@@ -1,4 +1,4 @@
-const CACHE = 'chengfa-v6'
+const CACHE = 'chengfa-v7'
 
 // sw.js 放在站点目录里，作用域就是它所在的目录。
 // 部署后地址是 /chengfa/sw.js，作用域为 /chengfa/。
@@ -14,6 +14,16 @@ const PRECACHE = [
   `${BASE}icons/icon-512.png?v=2`,
   `${BASE}icons/icon-maskable-192.png?v=2`,
   `${BASE}icons/icon-maskable-512.png?v=2`,
+  `${BASE}fox/fox-happy.svg`,
+  `${BASE}fox/fox-sing.svg`,
+  `${BASE}fox/fox-think.svg`,
+  `${BASE}fox/fox-cheer.svg`,
+  `${BASE}fox/fox-listen.svg`,
+  `${BASE}fox/fox-happy.png`,
+  `${BASE}fox/fox-sing.png`,
+  `${BASE}fox/fox-think.png`,
+  `${BASE}fox/fox-cheer.png`,
+  `${BASE}fox/fox-listen.png`,
 ]
 
 const SW_PATH = new URL(self.location.href).pathname
