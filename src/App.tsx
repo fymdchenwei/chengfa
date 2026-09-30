@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { HashRouter, Route, Routes, useLocation } from 'react-router'
 import { AppShell } from './components/AppShell.tsx'
+import { RotatePrompt } from './components/RotatePrompt.tsx'
 import { ErrorBoundary } from './components/ErrorBoundary.tsx'
 import { prepareSpeech } from './domain/speech.ts'
 import { ChallengePage } from './pages/ChallengePage.tsx'
@@ -39,6 +40,7 @@ export default function App() {
         <HashRouter>
           <ScrollToTop />
           <WarmSpeech />
+          <RotatePrompt />
           <Routes>
             <Route element={<AppShell />}>
               <Route index element={<HomePage />} />
