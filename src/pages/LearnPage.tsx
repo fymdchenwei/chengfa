@@ -20,19 +20,24 @@ export function LearnPage() {
             <li key={n}>
               <Link
                 to={`/learn/${n}`}
-                className="flex min-h-20 items-center gap-3 rounded-[1.6rem] bg-white px-3 py-3 shadow-[0_6px_0_#f0e2d0]"
+                className="flex items-center gap-3 rounded-[1.4rem] bg-white px-3 py-2.5 shadow-[0_5px_0_#f0e2d0]"
               >
                 <span
-                  className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl text-3xl font-black"
+                  className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-2xl font-black"
                   style={{ backgroundColor: tableColor(n) }}
                 >
                   {n}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-2xl font-black">{n} 的口诀</span>
-                  <span className="block truncate text-lg font-bold text-muted">{rhyme(n, n)}</span>
+                  <span className="block text-xl font-black">{n} 的口诀</span>
+                  <span className="mt-1 flex items-center gap-2 whitespace-nowrap">
+                    <span className="text-base font-extrabold">
+                      {n} × {n} = {n * n}
+                    </span>
+                    <span className="rounded-full bg-[#ffe6a8] px-2 py-0.5 text-sm font-black">{rhyme(n, n)}</span>
+                  </span>
                 </span>
-                <span aria-hidden="true" className="text-3xl font-black">
+                <span aria-hidden="true" className="text-2xl font-black text-muted">
                   ›
                 </span>
               </Link>

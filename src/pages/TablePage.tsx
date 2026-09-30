@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { equationText, factId, type Fact } from '../domain/facts.ts'
-import { rhyme, spokenAnswer } from '../domain/rhyme.ts'
+import { rhyme, spokenRhyme } from '../domain/rhyme.ts'
 import { masteryLabel, masteryOf } from '../domain/srs.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
@@ -32,7 +32,7 @@ export function TablePage() {
             <p className="text-3xl font-black">{rhyme(picked.a, picked.b)}</p>
             <p className="text-lg font-bold text-muted">{masteryLabel(masteryOf(card))}</p>
             <div className="flex items-center justify-between gap-3">
-              <SpeakerButton text={spokenAnswer(picked.a, picked.b)} enabled={data.speechOn} />
+              <SpeakerButton text={spokenRhyme(picked.a, picked.b)} enabled={data.speechOn} />
               <button type="button" className="min-h-16 flex-1 rounded-full bg-coral text-xl font-extrabold" onClick={() => setPicked(null)}>
                 关闭
               </button>

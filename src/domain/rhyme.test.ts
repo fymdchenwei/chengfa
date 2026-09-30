@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { numberToZh, rhyme, spokenAnswer, spokenQuestion } from './rhyme.ts'
+import { numberToZh, rhyme, spokenAnswer, spokenQuestion, spokenRhyme } from './rhyme.ts'
 
 const RHYMES: Array<[number, number, string]> = [
   [1, 1, '一一得一'],
@@ -75,5 +75,15 @@ describe('乘法口诀', () => {
   it('朗读题目时不说出答案，朗读答案时带上口诀', () => {
     expect(spokenQuestion(3, 4)).toBe('三乘四等于多少？')
     expect(spokenAnswer(3, 4)).toBe('三乘四等于十二。三四十二')
+  })
+
+  it('把口诀读成带停顿的短语，而不是算式', () => {
+    expect(spokenRhyme(1, 1)).toBe('一一，得一')
+    expect(spokenRhyme(1, 9)).toBe('一九，得九')
+    expect(spokenRhyme(2, 5)).toBe('二五，一十')
+    expect(spokenRhyme(5, 2)).toBe('二五，一十')
+    expect(spokenRhyme(3, 4)).toBe('三四，十二')
+    expect(spokenRhyme(3, 7)).toBe('三七，二十一')
+    expect(spokenRhyme(9, 9)).toBe('九九，八十一')
   })
 })

@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { equationText, factId, type Fact } from '../domain/facts.ts'
 import { LEVELS } from '../domain/levels.ts'
-import { rhyme, spokenAnswer } from '../domain/rhyme.ts'
+import { rhyme, spokenRhyme } from '../domain/rhyme.ts'
 import { answerTotals, masteryLabel, masteryOf, summarizeMastery, weakFacts } from '../domain/srs.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
 import { FactGrid } from '../components/FactGrid.tsx'
+import { SpeechSettings } from '../components/SpeechSettings.tsx'
 import { Mascot } from '../components/Mascot.tsx'
 import { SpeakerButton } from '../components/SpeakerButton.tsx'
 import { Button, Dialog, MasteryLegend, Stars } from '../components/ui.tsx'
@@ -58,7 +59,7 @@ export function ProgressPage() {
                   <p className="text-2xl font-black">{equationText(card.a, card.b)}</p>
                   <p className="text-lg font-bold text-muted">{rhyme(card.a, card.b)} · {masteryLabel(masteryOf(card))}</p>
                 </div>
-                <SpeakerButton text={spokenAnswer(card.a, card.b)} enabled={data.speechOn} />
+                <SpeakerButton text={spokenRhyme(card.a, card.b)} enabled={data.speechOn} />
               </li>
             ))}
           </ul>
@@ -98,6 +99,8 @@ export function ProgressPage() {
         <Toggle label="朗读" on={data.speechOn} onToggle={() => setSpeech(!data.speechOn)} />
       </section>
 
+      <SpeechSettings />
+
       <section>
         <h2 className="text-2xl font-extrabold">各关星星</h2>
         <ul className="mt-3 grid grid-cols-4 gap-2">
@@ -123,7 +126,7 @@ export function ProgressPage() {
               <p className="text-3xl font-black">{rhyme(picked.a, picked.b)}</p>
               <p className="mt-1 text-lg font-bold text-muted">{masteryLabel(masteryOf(pickedCard))}</p>
             </div>
-            <SpeakerButton text={spokenAnswer(picked.a, picked.b)} enabled={data.speechOn} />
+            <SpeakerButton text={spokenRhyme(picked.a, picked.b)} enabled={data.speechOn} />
           </div>
         ) : null}
       </Dialog>

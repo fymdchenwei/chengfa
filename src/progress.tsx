@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { factId } from './domain/facts.ts'
 import { applyAnswer, createCard, mergeLevelResult, type Mastery, type SrsCard } from './domain/srs.ts'
+import { normalizeSpeechRate, sanitizeSpeechVoice, setSpeechPrefs } from './domain/speech.ts'
 import { loadAppData, saveAppData, type AppData, type KeyValueStore } from './domain/storage.ts'
 import { ProgressContext } from './progress-context.ts'
 
@@ -27,6 +28,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     saveAppData(store, data)
+    setSpeechPrefs({ voiceName: data.speechVoice, rate: data.speechRate })
   }, [store, data])
 
   const recordAnswer = useCallback((a: number, b: number, correct: boolean) => {
@@ -58,6 +60,22 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     setData((prev) => ({ ...prev, speechOn: on }))
   }, [])
 
+  const setSpeechVoice = useCallback((name: string) => {
+    setData((prev) => {
+      const next = { ...prev, speechVoice: sanitizeSpeechVoice(name) }
+      setSpeechPrefs({ voiceName: next.speechVoice, rate: next.speechRate })
+      return next
+    })
+  }, [])
+
+  const setSpeechRate = useCallback((rate: number) => {
+    setData((prev) => {
+      const next = { ...prev, speechRate: normalizeSpeechRate(rate) }
+      setSpeechPrefs({ voiceName: next.speechVoice, rate: next.speechRate })
+      return next
+    })
+  }, [])
+
   const dismissTip = useCallback(() => {
     setData((prev) => ({ ...prev, tipDismissed: true }))
   }, [])
@@ -68,7 +86,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
 
   return (
     <ProgressContext.Provider
-      value={{ data, recordAnswer, recordLevel, setSound, setSpeech, dismissTip, resetProgress }}
+      value={{ data, recordAnswer, recordLevel, setSound, setSpeech, setSpeechVoice, setSpeechRate, dismissTip, resetProgress }}
     >
       {children}
     </ProgressContext.Provider>

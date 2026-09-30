@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { canSpeak, speakChinese } from '../domain/speech.ts'
 
-export function SpeakerButton({ text, enabled }: { text: string; enabled: boolean }) {
+export function SpeakerButton({ text, enabled, size = 'lg' }: { text: string; enabled: boolean; size?: 'md' | 'lg' }) {
   const [hint, setHint] = useState('')
+  const box = size === 'md' ? 'h-12 w-12' : 'h-16 w-16'
+  const icon = size === 'md' ? 'h-6 w-6' : 'h-8 w-8'
 
   return (
     <div className="flex shrink-0 flex-col items-center">
       <button
         type="button"
-        className="grid h-16 w-16 cursor-pointer place-items-center rounded-full bg-[#fff1cc] text-ink shadow-[0_4px_0_#e7d3a1] active:translate-y-0.5"
+        className={`grid ${box} cursor-pointer place-items-center rounded-full bg-[#fff1cc] text-ink shadow-[0_4px_0_#e7d3a1] active:translate-y-0.5`}
         aria-label="读出来"
         onClick={() => {
           if (!enabled) {
@@ -23,7 +25,7 @@ export function SpeakerButton({ text, enabled }: { text: string; enabled: boolea
           setHint('')
         }}
       >
-        <svg viewBox="0 0 24 24" className="h-8 w-8" aria-hidden="true">
+        <svg viewBox="0 0 24 24" className={icon} aria-hidden="true">
           <path fill="currentColor" d="M4 9h4l5-4v14l-5-4H4z" />
           <path
             fill="none"

@@ -1,4 +1,5 @@
 import { LEVELS } from './levels.ts'
+import { normalizeSpeechRate, sanitizeSpeechVoice } from './speech.ts'
 import { createCard, type LevelRecord, type Mastery, type SrsCard } from './srs.ts'
 
 export const STORAGE_KEY = 'chengfa-progress-v1'
@@ -9,6 +10,8 @@ export interface AppData {
   levels: Record<string, LevelRecord>
   soundOn: boolean
   speechOn: boolean
+  speechVoice: string
+  speechRate: number
   tipDismissed: boolean
 }
 
@@ -24,6 +27,8 @@ export function defaultAppData(): AppData {
     levels: {},
     soundOn: true,
     speechOn: true,
+    speechVoice: '',
+    speechRate: normalizeSpeechRate(undefined),
     tipDismissed: false,
   }
 }
@@ -96,6 +101,8 @@ export function loadAppData(storage: KeyValueStore): AppData {
       levels: sanitizeLevels(parsed.levels),
       soundOn: parsed.soundOn !== false,
       speechOn: parsed.speechOn !== false,
+      speechVoice: sanitizeSpeechVoice(parsed.speechVoice),
+      speechRate: normalizeSpeechRate(parsed.speechRate),
       tipDismissed: parsed.tipDismissed === true,
     }
   } catch {

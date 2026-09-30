@@ -5,7 +5,7 @@ import { equationText, factId, tableColor, type AnswerMode } from '../domain/fac
 import { isLevelUnlocked, LEVELS, levelById, levelPool, type LevelDef } from '../domain/levels.ts'
 import { readPracticeSetup, type PracticeSetup } from '../domain/practiceSetup.ts'
 import { createChoices } from '../domain/questions.ts'
-import { rhyme, spokenAnswer, spokenQuestion } from '../domain/rhyme.ts'
+import { rhyme, spokenQuestion, spokenRhyme } from '../domain/rhyme.ts'
 import { stopSpeech } from '../domain/speech.ts'
 import { startLevelSession, startPracticeSession } from '../domain/startSession.ts'
 import {
@@ -236,7 +236,7 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
   const asking = state.session.phase === 'asking'
   const retry = retryDelay(state.session)
   const questionNumber = asking ? state.session.answered + 1 : Math.max(1, state.session.answered)
-  const speechText = asking ? spokenQuestion(shown.a, shown.b) : spokenAnswer(shown.a, shown.b)
+  const speechText = asking ? spokenQuestion(shown.a, shown.b) : spokenRhyme(shown.a, shown.b)
   const backTo = kind === 'practice' ? '/practice' : '/challenge'
 
   return (
@@ -420,7 +420,7 @@ function Summary({
                   <p className="text-2xl font-black">{equationText(fact.a, fact.b)}</p>
                   <p className="text-lg font-bold text-muted">{rhyme(fact.a, fact.b)}</p>
                 </div>
-                <SpeakerButton text={spokenAnswer(fact.a, fact.b)} enabled={speechOn} />
+                <SpeakerButton text={spokenRhyme(fact.a, fact.b)} enabled={speechOn} />
               </li>
             ))}
           </ul>

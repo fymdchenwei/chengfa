@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { equationText, tableColor } from '../domain/facts.ts'
-import { rhyme, spokenAnswer } from '../domain/rhyme.ts'
+import { rhyme, spokenRhyme } from '../domain/rhyme.ts'
 import { speakSequence, stopSpeech } from '../domain/speech.ts'
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
@@ -31,7 +31,7 @@ export function LearnRowPage() {
     )
   }
 
-  const lines = Array.from({ length: 9 }, (_, index) => spokenAnswer(n, index + 1))
+  const lines = Array.from({ length: 9 }, (_, index) => spokenRhyme(n, index + 1))
 
   return (
     <div className="flex flex-col gap-4">
@@ -59,20 +59,24 @@ export function LearnRowPage() {
         </div>
         {hint ? <p className="mt-3 text-base font-bold">{hint}</p> : null}
       </header>
-      <ul className="grid gap-3">
+      <ul className="grid gap-2">
         {Array.from({ length: 9 }, (_, index) => {
           const b = index + 1
           return (
-            <li key={b} className="rounded-[1.6rem] bg-white p-4 shadow-[0_6px_0_#f0e2d0]">
-              <div className="flex items-center gap-3">
-                <div className="min-w-0 flex-1">
-                  <p className="text-4xl font-black tracking-tight">{n} × {b}</p>
-                  <p className="mt-1 text-3xl font-black text-[#d26522]">= {n * b}</p>
-                </div>
-                <SpeakerButton text={spokenAnswer(n, b)} enabled={data.speechOn} />
+            <li key={b} className="flex items-center gap-2 rounded-[1.25rem] bg-white px-3 py-2 shadow-[0_4px_0_#f0e2d0]">
+              <p className="shrink-0 whitespace-nowrap text-xl font-black leading-none tracking-tight">
+                {n}
+                <span className="px-1 text-muted">×</span>
+                {b}
+                <span className="px-1 text-[#e06a28]">=</span>
+                <span className="text-[#e06a28]">{n * b}</span>
+              </p>
+              <p className="shrink-0 whitespace-nowrap rounded-full bg-[#ffe6a8] px-2.5 py-1 text-base font-black leading-none">
+                {rhyme(n, b)}
+              </p>
+              <div className="ml-auto">
+                <SpeakerButton text={spokenRhyme(n, b)} enabled={data.speechOn} size="md" />
               </div>
-              <p className="mt-3 text-base font-bold text-muted">口诀</p>
-              <p className="mt-1 inline-flex rounded-full bg-[#ffe6a8] px-4 py-2 text-2xl font-black">{rhyme(n, b)}</p>
               <p className="sr-only">{equationText(n, b)}</p>
             </li>
           )

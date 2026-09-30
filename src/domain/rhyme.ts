@@ -33,3 +33,15 @@ export function spokenQuestion(a: number, b: number): string {
 export function spokenAnswer(a: number, b: number): string {
   return `${numberToZh(a)}乘${numberToZh(b)}等于${numberToZh(a * b)}。${rhyme(a, b)}`
 }
+
+/** 把口诀读成一拍一拍的短语，逗号留给语音引擎停一下。 */
+export function spokenRhyme(a: number, b: number): string {
+  const left = Math.min(a, b)
+  const right = Math.max(a, b)
+  const head = `${DIGITS[left]}${DIGITS[right]}`
+  const product = left * right
+  if (product < 10) return `${head}，得${DIGITS[product]}`
+  if (product === 10) return `${head}，一十`
+  if (product < 20) return `${head}，十${DIGITS[product % 10]}`
+  return `${head}，${numberToZh(product)}`
+}

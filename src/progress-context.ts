@@ -8,6 +8,8 @@ export interface ProgressApi {
   recordLevel: (levelId: string, stars: Mastery, correctCount: number) => void
   setSound: (on: boolean) => void
   setSpeech: (on: boolean) => void
+  setSpeechVoice: (name: string) => void
+  setSpeechRate: (rate: number) => void
   dismissTip: () => void
   resetProgress: () => void
 }

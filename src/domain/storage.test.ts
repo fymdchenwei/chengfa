@@ -48,6 +48,8 @@ describe('本地进度', () => {
     )
     expect(loaded.soundOn).toBe(false)
     expect(loaded.speechOn).toBe(true)
+    expect(loaded.speechVoice).toBe('')
+    expect(loaded.speechRate).toBe(0.8)
     expect(Object.keys(loaded.cards)).toEqual(['3x4'])
     expect(loaded.levels.t1?.stars).toBe(0)
     expect(loaded.levels.missing).toBeUndefined()
