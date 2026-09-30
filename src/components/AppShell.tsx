@@ -41,7 +41,7 @@ export function AppShell() {
           <path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" />
         </svg>
       </div>
-      <main className="relative z-10 px-4 pt-3" style={{ paddingBottom: 'calc(7.2rem + env(safe-area-inset-bottom))' }}>
+      <main className="app-main relative z-10 px-4">
         <Outlet />
       </main>
       <nav className="tabbar" aria-label="主要页面" style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>

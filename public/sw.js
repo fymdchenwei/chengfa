@@ -1,4 +1,4 @@
-const CACHE = 'chengfa-v10'
+const CACHE = 'chengfa-v11'
 
 // sw.js 放在站点目录里，作用域就是它所在的目录。
 // 部署后地址是 /chengfa/sw.js，作用域为 /chengfa/。

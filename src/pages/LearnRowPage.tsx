@@ -43,7 +43,7 @@ export function LearnRowPage() {
   const lines = Array.from({ length: 9 }, (_, index) => spokenRhyme(n, index + 1))
 
   return (
-    <div className="flex flex-col gap-2" style={{ paddingBottom: '2.6rem' }}>
+    <div className="flex flex-col gap-2" style={{ paddingBottom: '3.6rem' }}>
       <header className="flex items-start justify-between gap-2">
         <h1 className="bubble-title pt-1">{n} 的口诀</h1>
         <FoxImage mood="sing" className="-mr-1 -mt-1 w-[26vw] max-w-[6.75rem]" />

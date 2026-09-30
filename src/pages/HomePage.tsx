@@ -13,8 +13,8 @@ export function HomePage() {
   const table = suggestTable(data.cards)
 
   return (
-    <div className="flex min-h-[calc(100dvh-8rem)] flex-col gap-2">
-      <header className="flex items-start justify-between gap-3">
+    <div className="home-screen">
+      <header className="flex shrink-0 items-start justify-between gap-3">
         <h1 className="park-title">
           <span className="park-stroke" aria-hidden="true">
             乘法乐园
@@ -29,15 +29,15 @@ export function HomePage() {
         </Link>
       </header>
 
-      <div className="flex flex-col items-center">
-        <FoxImage mood="happy" className="w-[62vw] max-w-[16rem]" />
+      <div className="home-mascot">
+        <FoxImage mood="happy" className="home-fox" />
         <Link to={`/learn/${table}`} className="speech-bubble -mt-1 max-w-[18rem] px-4 py-2.5 text-center text-base font-black leading-snug">
           嗨！今天我们一起练<span className="bubble-num">{table}</span>的口诀吧
           <IconNote className="ml-1" />
         </Link>
       </div>
 
-      <div className="mt-auto grid gap-2 pb-1">
+      <div className="home-actions">
         <Link to={`/learn/${table}`} className="home-cta home-cta-blue">
           <span className="home-ico">
             <IconBook className="h-7 w-7" />
