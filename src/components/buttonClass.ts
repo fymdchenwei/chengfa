@@ -1,11 +1,14 @@
-type Variant = 'sun' | 'white' | 'ink' | 'ghost'
+type Variant = 'sun' | 'white' | 'ink' | 'ghost' | 'yellow' | 'blue' | 'pink'
 type Size = 'md' | 'lg'
 
 const VARIANTS: Record<Variant, string> = {
-  sun: 'bg-coral text-ink shadow-[0_6px_0_#d26522]',
-  white: 'bg-white text-ink shadow-[0_6px_0_#e7d7c3]',
-  ink: 'bg-ink text-white shadow-[0_6px_0_#181226]',
+  sun: 'candy candy-orange',
+  white: 'candy candy-white',
+  ink: 'candy candy-ink',
   ghost: 'bg-transparent text-ink shadow-none',
+  yellow: 'candy candy-yellow',
+  blue: 'candy candy-blue',
+  pink: 'candy candy-pink',
 }
 
 export function buttonClass(variant: Variant = 'sun', size: Size = 'lg', className = ''): string {

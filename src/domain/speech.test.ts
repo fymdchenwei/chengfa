@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
   DEFAULT_SPEECH_RATE,
+  formatSpeechRate,
   isChineseVoice,
+  isSpeaking,
   normalizeSpeechRate,
+  noteSpeechEnd,
+  noteSpeechStart,
+  noteSpeechStop,
   pickChineseVoice,
   rankChineseVoices,
   sanitizeSpeechVoice,
@@ -49,11 +54,27 @@ describe('中文语音选择', () => {
   it('速度和声音名字会收成可以保存的值', () => {
     expect(normalizeSpeechRate(undefined)).toBe(DEFAULT_SPEECH_RATE)
     expect(normalizeSpeechRate(0.72)).toBe(0.72)
-    expect(normalizeSpeechRate(0.79)).toBe(0.8)
-    expect(normalizeSpeechRate(9)).toBe(0.95)
+    expect(normalizeSpeechRate(0.79)).toBe(0.79)
+    expect(normalizeSpeechRate(0.2)).toBe(0.5)
+    expect(normalizeSpeechRate(9)).toBe(1.5)
+    expect(formatSpeechRate(0.8)).toBe('0.8x')
+    expect(formatSpeechRate(1)).toBe('1.0x')
+    expect(formatSpeechRate(1.5)).toBe('1.5x')
     expect(sanitizeSpeechVoice('  Tingting  ')).toBe('Tingting')
     expect(sanitizeSpeechVoice('')).toBe('')
     expect(sanitizeSpeechVoice('a'.repeat(121))).toBe('')
     expect(sanitizeSpeechVoice('坏\n名字')).toBe('')
+  })
+
+  it('过期的朗读结束不会把新的朗读关掉', () => {
+    const older = noteSpeechStart()
+    const newer = noteSpeechStart()
+    noteSpeechEnd(older)
+    expect(isSpeaking()).toBe(true)
+    noteSpeechEnd(newer)
+    expect(isSpeaking()).toBe(false)
+    noteSpeechStart()
+    noteSpeechStop()
+    expect(isSpeaking()).toBe(false)
   })
 })

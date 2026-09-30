@@ -7,7 +7,7 @@ import { answerTotals, masteryLabel, masteryOf, summarizeMastery, weakFacts } fr
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
 import { FactGrid } from '../components/FactGrid.tsx'
-import { SpeechSettings } from '../components/SpeechSettings.tsx'
+import { buttonClass } from '../components/buttonClass.ts'
 import { Mascot } from '../components/Mascot.tsx'
 import { SpeakerButton } from '../components/SpeakerButton.tsx'
 import { Button, Dialog, MasteryLegend, Stars } from '../components/ui.tsx'
@@ -99,7 +99,9 @@ export function ProgressPage() {
         <Toggle label="朗读" on={data.speechOn} onToggle={() => setSpeech(!data.speechOn)} />
       </section>
 
-      <SpeechSettings />
+      <Link to="/voice" className={buttonClass('pink', 'lg', 'w-full')}>
+        语音设置
+      </Link>
 
       <section>
         <h2 className="text-2xl font-extrabold">各关星星</h2>

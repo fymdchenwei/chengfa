@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { playTone } from '../domain/audio.ts'
-import { equationText, factId, tableColor, type AnswerMode } from '../domain/facts.ts'
+import { equationText, factId, type AnswerMode } from '../domain/facts.ts'
 import { isLevelUnlocked, LEVELS, levelById, levelPool, type LevelDef } from '../domain/levels.ts'
 import { readPracticeSetup, type PracticeSetup } from '../domain/practiceSetup.ts'
 import { createChoices } from '../domain/questions.ts'
@@ -22,6 +22,7 @@ import {
 import { usePageTitle } from '../hooks/usePageTitle.ts'
 import { useProgress } from '../hooks/useProgress.ts'
 import { ChoiceGrid } from '../components/ChoiceGrid.tsx'
+import { Fox } from '../components/Fox.tsx'
 import { Mascot } from '../components/Mascot.tsx'
 import { NumberPad } from '../components/NumberPad.tsx'
 import { SpeakerButton } from '../components/SpeakerButton.tsx'
@@ -240,7 +241,7 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
   const backTo = kind === 'practice' ? '/practice' : '/challenge'
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-lg flex-col px-4 pt-4" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
+    <div className="flex flex-col gap-4">
       <header className="flex items-center justify-between gap-3">
         <button type="button" className="min-h-12 cursor-pointer rounded-full px-2 text-lg font-extrabold" onClick={() => setLeaveOpen(true)}>
           ‹ 返回
@@ -249,12 +250,18 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
         <p className="text-lg font-extrabold text-muted">答对 {state.session.correctCount}</p>
       </header>
 
-      <div className="mt-4 flex items-center gap-3">
-        <div className="flex-1 rounded-[1.8rem] px-4 py-8 text-center" style={{ backgroundColor: tableColor(shown.a) }}>
-          <p className="text-[3.2rem] font-black leading-none tracking-tight">{shown.a} × {shown.b}</p>
-          <p className="mt-3 text-2xl font-extrabold">{asking ? '等于多少？' : equationText(shown.a, shown.b)}</p>
+      <div className="flex items-center gap-3">
+        <Fox
+          mood={asking ? 'think' : state.session.reviewingCorrect ? 'cheer' : 'oops'}
+          className="h-24 w-24"
+        />
+        <div className="min-w-0 flex-1 rounded-[1.8rem] bg-white/95 px-4 py-6 text-center shadow-[0_8px_0_#f0e2d0]">
+          <p className="text-5xl font-black leading-none tracking-tight">
+            {shown.a} × {shown.b}
+          </p>
+          <p className="mt-3 text-xl font-extrabold">{asking ? '等于多少？' : equationText(shown.a, shown.b)}</p>
         </div>
-        <SpeakerButton text={speechText} enabled={data.speechOn} />
+        <SpeakerButton text={speechText} enabled={data.speechOn} size="md" />
       </div>
 
       <div className="mt-4 flex-1">

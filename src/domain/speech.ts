@@ -9,13 +9,9 @@ export interface SpeechPrefs {
   rate: number
 }
 
-export const SPEECH_RATES = [
-  { id: 'slow', label: '慢一点', rate: 0.72 },
-  { id: 'steady', label: '正好', rate: 0.8 },
-  { id: 'brisk', label: '快一点', rate: 0.95 },
-] as const
-
 export const DEFAULT_SPEECH_RATE = 0.8
+export const SPEECH_RATE_MIN = 0.5
+export const SPEECH_RATE_MAX = 1.5
 export const SPEECH_PITCH = 1
 
 const prefs: SpeechPrefs = { voiceName: '', rate: DEFAULT_SPEECH_RATE }
@@ -39,16 +35,53 @@ export function sanitizeSpeechVoice(value: unknown): string {
 
 export function normalizeSpeechRate(value: unknown): number {
   if (typeof value !== 'number' || !Number.isFinite(value)) return DEFAULT_SPEECH_RATE
-  let best: (typeof SPEECH_RATES)[number] = SPEECH_RATES[1]
-  let bestDistance = Infinity
-  for (const preset of SPEECH_RATES) {
-    const distance = Math.abs(preset.rate - value)
-    if (distance < bestDistance) {
-      best = preset
-      bestDistance = distance
-    }
+  const clamped = Math.min(SPEECH_RATE_MAX, Math.max(SPEECH_RATE_MIN, value))
+  return Math.round(clamped * 100) / 100
+}
+
+export function formatSpeechRate(value: number): string {
+  const rate = normalizeSpeechRate(value)
+  const digits = Number.isInteger(rate) ? rate.toFixed(1) : String(rate)
+  return `${digits}x`
+}
+
+type SpeechListener = (speaking: boolean) => void
+
+let speechGeneration = 0
+let speakingNow = false
+const speechListeners = new Set<SpeechListener>()
+
+function publishSpeaking(next: boolean): void {
+  speakingNow = next
+  for (const listener of speechListeners) listener(next)
+}
+
+export function isSpeaking(): boolean {
+  return speakingNow
+}
+
+export function subscribeSpeaking(listener: SpeechListener): () => void {
+  speechListeners.add(listener)
+  listener(speakingNow)
+  return () => {
+    speechListeners.delete(listener)
   }
-  return best.rate
+}
+
+export function noteSpeechStart(): number {
+  speechGeneration += 1
+  publishSpeaking(true)
+  return speechGeneration
+}
+
+export function noteSpeechEnd(token: number): void {
+  if (token !== speechGeneration) return
+  publishSpeaking(false)
+}
+
+export function noteSpeechStop(): void {
+  speechGeneration += 1
+  publishSpeaking(false)
 }
 
 export function isChineseVoice(voice: VoiceInfo): boolean {
@@ -116,6 +149,7 @@ function prepareUtterance(text: string, synth: SpeechSynthesis): SpeechSynthesis
 }
 
 export function stopSpeech(): void {
+  noteSpeechStop()
   if (!canSpeak()) return
   window.speechSynthesis.cancel()
 }
@@ -125,7 +159,11 @@ export function speakChinese(text: string): boolean {
   const synth = window.speechSynthesis
   synth.cancel()
   synth.resume()
-  synth.speak(prepareUtterance(text, synth))
+  const token = noteSpeechStart()
+  const utter = prepareUtterance(text, synth)
+  utter.onend = () => noteSpeechEnd(token)
+  utter.onerror = () => noteSpeechEnd(token)
+  synth.speak(utter)
   return true
 }
 
@@ -135,12 +173,17 @@ export function speakSequence(parts: readonly string[]): boolean {
   const synth = window.speechSynthesis
   synth.cancel()
   synth.resume()
+  const token = noteSpeechStart()
   let index = 0
   const next = () => {
-    if (index >= lines.length) return
+    if (index >= lines.length) {
+      noteSpeechEnd(token)
+      return
+    }
     const utter = prepareUtterance(lines[index] ?? '', synth)
     index += 1
     utter.onend = () => next()
+    utter.onerror = () => noteSpeechEnd(token)
     synth.speak(utter)
   }
   next()

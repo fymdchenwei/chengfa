@@ -67,14 +67,14 @@ export function ProgressBar({ value, max, label }: { value: number; max: number;
   const pct = max <= 0 ? 0 : Math.max(0, Math.min(100, Math.round((value / max) * 100)))
   return (
     <div
-      className="h-4 overflow-hidden rounded-full bg-white"
+      className="h-4 overflow-hidden rounded-full bg-[#ffe3cc]"
       role="progressbar"
       aria-label={label}
       aria-valuenow={value}
       aria-valuemin={0}
       aria-valuemax={max}
     >
-      <div className="h-full rounded-full bg-coral" style={{ width: `${pct}%` }} />
+      <div className="h-full rounded-full bg-gradient-to-r from-[#ffb067] to-[#ff7a2e]" style={{ width: `${pct}%` }} />
     </div>
   )
 }

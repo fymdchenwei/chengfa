@@ -17,7 +17,17 @@ export function ChoiceGrid({
         const revealed = disabled
         const isAnswer = revealed && choice === answer
         const isMiss = revealed && choice === picked && choice !== answer
-        const tone = isAnswer ? 'bg-[#b6f3d4] shadow-[0_5px_0_#79d7aa]' : isMiss ? 'bg-[#ffd0c2] shadow-[0_5px_0_#e7b2a4]' : 'bg-white shadow-[0_5px_0_#e7d7c3]'
+        const palette = [
+          'bg-gradient-to-b from-[#ffe98a] to-[#ffc44a] shadow-[0_6px_0_#e29a1e]',
+          'bg-gradient-to-b from-[#d7ecff] to-[#8ec4ff] shadow-[0_6px_0_#6aa4e4]',
+          'bg-gradient-to-b from-[#ffd6ee] to-[#ff9dcb] shadow-[0_6px_0_#e57aaa]',
+          'bg-gradient-to-b from-[#d9f8e6] to-[#8ee0b5] shadow-[0_6px_0_#6bc498]',
+        ]
+        const tone = isAnswer
+          ? 'bg-[#b6f3d4] shadow-[0_5px_0_#79d7aa]'
+          : isMiss
+            ? 'bg-[#ffd0c2] shadow-[0_5px_0_#e7b2a4]'
+            : palette[choices.indexOf(choice) % palette.length]
         return (
           <button
             key={choice}

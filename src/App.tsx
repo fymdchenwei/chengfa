@@ -12,6 +12,7 @@ import { PracticePage } from './pages/PracticePage.tsx'
 import { ProgressPage } from './pages/ProgressPage.tsx'
 import { QuizPage } from './pages/QuizPage.tsx'
 import { TablePage } from './pages/TablePage.tsx'
+import { VoicePage } from './pages/VoicePage.tsx'
 import { ProgressProvider } from './progress.tsx'
 
 function ScrollToTop() {
@@ -47,10 +48,11 @@ export default function App() {
               <Route path="practice" element={<PracticePage />} />
               <Route path="challenge" element={<ChallengePage />} />
               <Route path="me" element={<ProgressPage />} />
+              <Route path="voice" element={<VoicePage />} />
+              <Route path="practice/run" element={<QuizPage kind="practice" />} />
+              <Route path="challenge/:id" element={<QuizPage kind="challenge" />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
-            <Route path="practice/run" element={<QuizPage kind="practice" />} />
-            <Route path="challenge/:id" element={<QuizPage kind="challenge" />} />
           </Routes>
         </HashRouter>
       </ProgressProvider>
