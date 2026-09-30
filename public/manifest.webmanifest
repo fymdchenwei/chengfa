@@ -7,6 +7,7 @@
   "start_url": "/chengfa/",
   "scope": "/chengfa/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#FFF6EA",
   "theme_color": "#FF8A3D",
   "icons": [

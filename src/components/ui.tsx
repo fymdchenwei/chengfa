@@ -52,7 +52,7 @@ export function Dialog({
         aria-modal="true"
         aria-labelledby="dialog-title"
         tabIndex={-1}
-        className="relative z-10 w-full max-w-lg rounded-t-[2rem] bg-cream p-5 shadow-2xl outline-none sm:rounded-[2rem]"
+        className="app-frame relative z-10 w-full rounded-t-[2rem] bg-cream p-5 shadow-2xl outline-none sm:rounded-[2rem]"
       >
         <h2 id="dialog-title" className="text-2xl font-extrabold">
           {title}

@@ -22,7 +22,7 @@ export function AppShell() {
   const scene = sceneName(pathname)
 
   return (
-    <div className={`scene mx-auto min-h-dvh max-w-lg ${scene}`}>
+    <div className={`scene app-frame mx-auto min-h-dvh ${scene}`}>
       <div className="scene-sky" aria-hidden="true">
         <span className="cloud left-[6%] top-14 w-28" />
         <span className="cloud right-[4%] top-24 w-24" />

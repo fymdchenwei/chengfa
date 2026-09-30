@@ -390,7 +390,7 @@ function initialState(
 
 function Blocked({ title, body, to, action }: { title: string; body: string; to: string; action: string }) {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center gap-4 px-5">
+    <div className="app-frame mx-auto flex min-h-dvh flex-col justify-center gap-4 px-5">
       <FoxImage mood="think" className="w-36" />
       <h1 className="text-4xl font-black">{title}</h1>
       <p className="text-lg font-bold text-muted">{body}</p>
@@ -434,7 +434,7 @@ function Summary({
       : `你答对了 ${session.correctCount} 题，一共做了 ${session.answered} 题`
 
   return (
-    <div className="pop-in mx-auto flex min-h-dvh max-w-lg flex-col gap-4 px-4 py-6" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
+    <div className="pop-in app-frame mx-auto flex min-h-dvh flex-col gap-4 px-4 py-6" style={{ paddingBottom: 'calc(1.5rem + env(safe-area-inset-bottom))' }}>
       <FoxImage mood={mood} className="w-40" />
       <h1 className="text-4xl font-black">{timed && timeUp ? '时间到' : '这轮完成啦'}</h1>
       <p className="text-xl font-extrabold">{headline}</p>
