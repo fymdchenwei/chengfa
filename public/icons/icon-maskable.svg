@@ -4,9 +4,8 @@
 <radialGradient id="fur" cx="0.4" cy="0.3" r="0.9"><stop offset="0" stop-color="#ffc46b"/><stop offset="1" stop-color="#ff8a2a"/></radialGradient>
 <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
 <linearGradient id="badge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#ffb000"/></linearGradient>
-</defs>
-<rect width="512" height="512" fill="url(#bg)"/>
-<circle cx="256" cy="270" r="250" fill="url(#glow)"/>
+</defs><rect width="512" height="512" fill="url(#bg)"/>
+<g transform="translate(51.2 51.2) scale(0.8)"><circle cx="256" cy="270" r="250" fill="url(#glow)"/>
 <!-- sparkles -->
 <path d="M70 90l8 20 20 8-20 8-8 20-8-20-20-8 20-8z" fill="#fff" opacity=".9"/>
 <path d="M440 70l6 15 15 6-15 6-6 15-6-15-15-6 15-6z" fill="#fff" opacity=".9"/>
@@ -36,5 +35,4 @@
 <!-- multiply badge -->
 <circle cx="404" cy="118" r="76" fill="url(#badge)" stroke="#c2410c" stroke-width="10"/>
 <path d="M372 86 L436 150 M436 86 L372 150" stroke="#fff" stroke-width="22" stroke-linecap="round"/>
-<ellipse cx="380" cy="72" rx="26" ry="10" fill="#fff" opacity=".6" transform="rotate(-30 380 72)"/>
-</svg>
+<ellipse cx="380" cy="72" rx="26" ry="10" fill="#fff" opacity=".6" transform="rotate(-30 380 72)"/></g></svg>
