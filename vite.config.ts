@@ -3,6 +3,8 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
+  // GitHub Pages 项目站点挂在 https://fymdchenwei.github.io/chengfa/
+  base: '/chengfa/',
   plugins: [react(), tailwindcss()],
   server: {
     host: '0.0.0.0',

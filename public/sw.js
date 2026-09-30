@@ -1,15 +1,21 @@
-const CACHE = 'chengfa-v1'
+const CACHE = 'chengfa-v2'
+
+// sw.js 放在站点目录里，作用域就是它所在的目录。
+// 部署后地址是 /chengfa/sw.js，作用域为 /chengfa/。
+const BASE = new URL('./', self.location).pathname
 
 const PRECACHE = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest',
-  '/favicon.svg',
-  '/apple-touch-icon.png',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/icon-maskable-512.png',
+  BASE,
+  `${BASE}index.html`,
+  `${BASE}manifest.webmanifest`,
+  `${BASE}favicon.svg`,
+  `${BASE}apple-touch-icon.png`,
+  `${BASE}icons/icon-192.png`,
+  `${BASE}icons/icon-512.png`,
+  `${BASE}icons/icon-maskable-512.png`,
 ]
+
+const SW_PATH = new URL(self.location.href).pathname
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -45,7 +51,8 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url)
   if (url.origin !== self.location.origin) return
-  if (url.pathname === '/sw.js') return
+  if (url.pathname === SW_PATH) return
+  if (!url.pathname.startsWith(BASE)) return
 
   event.respondWith(networkFirst(request))
 })
@@ -62,7 +69,7 @@ async function networkFirst(request) {
     const cached = await caches.match(request)
     if (cached) return cached
     if (request.mode === 'navigate') {
-      const shell = (await caches.match('/index.html')) ?? (await caches.match('/'))
+      const shell = (await caches.match(`${BASE}index.html`)) ?? (await caches.match(BASE))
       if (shell) return shell
     }
     return new Response('离线了。请先联网打开一次「乘法」。', {

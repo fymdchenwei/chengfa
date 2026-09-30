@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-浏览器打开 [http://127.0.0.1:43217](http://127.0.0.1:43217)。
+浏览器打开 [http://127.0.0.1:43217/chengfa/](http://127.0.0.1:43217/chengfa/)。
 
 ## 测试
 
@@ -47,7 +47,9 @@ npm run preview
 
 `dist` 可以直接放到 Netlify、Cloudflare Pages、GitHub Pages，或任何静态网站目录。站点需要通过 HTTPS 访问，手机才能安装，服务工作线程也才能在离线时接管页面。
 
-页面地址写在 `#` 后面，例如 `/#/learn`。服务器不用额外配置「把所有路径都交回 index.html」。请把网站放在域名根目录；如果必须放在子路径，要再改 Vite 的 `base` 和应用清单里的 `start_url`。
+页面地址写在 `#` 后面，例如 `/chengfa/#/learn`。服务器不用额外配置「把所有路径都交回 index.html」。
+
+这个仓库按子路径 `/chengfa/` 构建：Vite 的 `base` 是 `/chengfa/`，应用清单的 `start_url` 和 `scope` 也是 `/chengfa/`，服务工作线程注册在 `/chengfa/sw.js`，作用域同样是 `/chengfa/`。推送到 `main` 后，GitHub Actions（`.github/workflows/pages.yml`）会用官方 Pages 动作构建并发布。Pages 的来源需要设为 **GitHub Actions**。
 
 ## 说明
 

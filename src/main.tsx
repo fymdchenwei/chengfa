@@ -5,7 +5,8 @@ import './index.css'
 
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    void navigator.serviceWorker.register('/sw.js')
+    const base = import.meta.env.BASE_URL
+    void navigator.serviceWorker.register(`${base}sw.js`, { scope: base })
   })
 }
 
