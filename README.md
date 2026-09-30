@@ -4,6 +4,8 @@
 
 不需要账号，没有广告，也没有统计。练习记录只保存在这台设备的浏览器里，第一次打开之后，断网也能用。
 
+线上地址：[https://fymdchenwei.github.io/chengfa/](https://fymdchenwei.github.io/chengfa/)
+
 ## 本地运行
 
 需要 Node.js 20 或更新版本。
@@ -49,7 +51,7 @@ npm run preview
 
 页面地址写在 `#` 后面，例如 `/chengfa/#/learn`。服务器不用额外配置「把所有路径都交回 index.html」。
 
-这个仓库按子路径 `/chengfa/` 构建：Vite 的 `base` 是 `/chengfa/`，应用清单的 `start_url` 和 `scope` 也是 `/chengfa/`，服务工作线程注册在 `/chengfa/sw.js`，作用域同样是 `/chengfa/`。推送到 `main` 后，GitHub Actions（`.github/workflows/pages.yml`）会用官方 Pages 动作构建并发布。Pages 的来源需要设为 **GitHub Actions**。
+这个仓库按子路径 `/chengfa/` 构建：Vite 的 `base` 是 `/chengfa/`，应用清单的 `start_url` 和 `scope` 也是 `/chengfa/`，服务工作线程注册在 `/chengfa/sw.js`，作用域同样是 `/chengfa/`。推送到 `main` 后，GitHub Actions（`.github/workflows/pages.yml`）会用官方 Pages 动作构建并发布到 [https://fymdchenwei.github.io/chengfa/](https://fymdchenwei.github.io/chengfa/)。Pages 的来源需要设为 **GitHub Actions**。
 
 ## 说明
 
