@@ -44,7 +44,7 @@ export function AppShell() {
       <main className="relative z-10 px-4 pt-3" style={{ paddingBottom: 'calc(7.2rem + env(safe-area-inset-bottom))' }}>
         <Outlet />
       </main>
-      <nav className="tabbar" aria-label="主要页面">
+      <nav className="tabbar" aria-label="主要页面" style={{ backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)' }}>
         {TABS.map((tab) => {
           const on = tab.match(pathname)
           return (
