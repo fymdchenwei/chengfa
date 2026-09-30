@@ -10,8 +10,8 @@ export function LearnPage() {
   return (
     <div className="flex flex-col gap-4">
       <header>
-        <h1 className="text-4xl font-black">学口诀</h1>
-        <p className="mt-1 text-lg font-bold text-muted">点一行，看 9 道算式</p>
+        <h1 className="display text-[2.15rem]">学口诀</h1>
+        <p className="mt-2 text-sm font-extrabold text-[#6d5a86]">点一行，看 9 道算式</p>
       </header>
       <ul className="grid gap-3">
         {Array.from({ length: 9 }, (_, index) => {
@@ -20,7 +20,7 @@ export function LearnPage() {
             <li key={n}>
               <Link
                 to={`/learn/${n}`}
-                className="flex items-center gap-3 rounded-[1.4rem] bg-white px-3 py-2.5 shadow-[0_5px_0_#f0e2d0]"
+                className={`rhyme-row rhyme-${['sun', 'mint', 'lilac', 'pink', 'sky'][index % 5]}`}
               >
                 <span
                   className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-2xl font-black"

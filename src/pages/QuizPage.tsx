@@ -237,31 +237,47 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
   const asking = state.session.phase === 'asking'
   const retry = retryDelay(state.session)
   const questionNumber = asking ? state.session.answered + 1 : Math.max(1, state.session.answered)
+  const roundSize = timed ? 0 : kind === 'challenge' && level ? level.count : setup && setup.tables.length === 1 ? 9 : 10
   const speechText = asking ? spokenQuestion(shown.a, shown.b) : spokenRhyme(shown.a, shown.b)
   const backTo = kind === 'practice' ? '/practice' : '/challenge'
 
+  const cheerLine = state.session.reviewingCorrect
+    ? `${rhyme(shown.a, shown.b)}，得 1 颗星`
+    : `${rhyme(shown.a, shown.b)}，再记一记`
+
   return (
-    <div className="flex flex-col gap-4">
-      <header className="flex items-center justify-between gap-3">
-        <button type="button" className="min-h-12 cursor-pointer rounded-full px-2 text-lg font-extrabold" onClick={() => setLeaveOpen(true)}>
+    <div className="flex flex-col gap-3">
+      <header className="flex items-center justify-between gap-2">
+        <button type="button" className="min-h-11 cursor-pointer rounded-full px-1 text-base font-extrabold" onClick={() => setLeaveOpen(true)}>
           ‹ 返回
         </button>
-        <p className="text-lg font-extrabold">{timed ? `剩余 ${Math.ceil(remainingMs / 1000)} 秒` : `第 ${questionNumber} 题`}</p>
-        <p className="text-lg font-extrabold text-muted">答对 {state.session.correctCount}</p>
+        <p className="display text-[1.55rem]">
+          {timed ? `${Math.ceil(remainingMs / 1000)} 秒` : `第 ${questionNumber} 题`}
+          {!timed && roundSize > 0 ? <span className="text-[1.05rem]"> / {roundSize}</span> : null}
+        </p>
+        <p className="star-chip text-base" aria-label={`答对 ${state.session.correctCount}`}>
+          <svg viewBox="0 0 24 24" className="h-6 w-6 fill-[#ffc857]" aria-hidden="true">
+            <path d="m12 2.5 2.5 6.2 6.6.6-5 4.3 1.5 6.4L12 16.7 6.4 20l1.5-6.4-5-4.3 6.6-.6Z" />
+          </svg>
+          {state.session.correctCount}
+        </p>
       </header>
 
-      <div className="flex items-center gap-3">
-        <Fox
-          mood={asking ? 'think' : state.session.reviewingCorrect ? 'cheer' : 'oops'}
-          className="h-24 w-24"
-        />
-        <div className="min-w-0 flex-1 rounded-[1.8rem] bg-white/95 px-4 py-6 text-center shadow-[0_8px_0_#f0e2d0]">
-          <p className="text-5xl font-black leading-none tracking-tight">
-            {shown.a} × {shown.b}
+      <div className="flex items-end gap-1">
+        <Fox mood={asking ? 'think' : state.session.reviewingCorrect ? 'cheer' : 'oops'} className="h-36 w-28" />
+        <div className="mb-3 min-w-0 flex-1">
+          <p className="speech-bubble px-3 py-2 text-center text-base font-black leading-snug">
+            {asking ? '这道题你一定行！' : state.session.reviewingCorrect ? '答对啦！' : '再看一看'}
           </p>
-          <p className="mt-3 text-xl font-extrabold">{asking ? '等于多少？' : equationText(shown.a, shown.b)}</p>
         </div>
-        <SpeakerButton text={speechText} enabled={data.speechOn} size="md" />
+        <SpeakerButton text={speechText} enabled={data.speechOn} size="md" tone="lilac" />
+      </div>
+
+      <div className="quiz-card px-4 py-5">
+        <p className="display text-6xl leading-none">
+          {shown.a} × {shown.b}
+        </p>
+        <p className="mt-3 text-xl font-extrabold">{asking ? '等于多少？' : equationText(shown.a, shown.b)}</p>
       </div>
 
       <div className="mt-4 flex-1">
@@ -308,6 +324,7 @@ function QuizRound({ kind, onRestart }: { kind: 'practice' | 'challenge'; onRest
             ) : null}
             {!state.session.reviewingCorrect && retry === 'now' ? <p className="mt-2 text-lg font-bold">我们马上再试一次</p> : null}
             {!state.session.reviewingCorrect && retry === 'soon' ? <p className="mt-2 text-lg font-bold">这道题一会儿还会出现</p> : null}
+            <p className="follow-bar mt-3 text-base">{cheerLine}</p>
             {!timed ? (
               <Button className="mt-4 w-full" onClick={onContinue}>
                 {state.session.queue.length === 0 ? '看结果' : '继续'}

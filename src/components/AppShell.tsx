@@ -1,58 +1,65 @@
-import { NavLink, Outlet } from 'react-router'
+import { NavLink, Outlet, useLocation } from 'react-router'
 import { IconBook, IconFlag, IconHome, IconPencil, IconStar } from './icons.tsx'
 
 const TABS = [
-  { to: '/', label: '首页', end: true, icon: IconHome },
-  { to: '/learn', label: '学习', end: false, icon: IconBook },
-  { to: '/practice', label: '练习', end: false, icon: IconPencil },
-  { to: '/challenge', label: '闯关', end: false, icon: IconFlag },
-  { to: '/me', label: '我的', end: false, icon: IconStar },
+  { to: '/', label: '首页', match: (path: string) => path === '/', icon: IconHome },
+  { to: '/learn/1', label: '口诀', match: (path: string) => path.startsWith('/learn'), icon: IconBook },
+  { to: '/practice', label: '练习', match: (path: string) => path.startsWith('/practice'), icon: IconPencil },
+  { to: '/challenge', label: '闯关', match: (path: string) => path.startsWith('/challenge'), icon: IconFlag },
+  { to: '/me', label: '进步', match: (path: string) => path === '/me' || path.startsWith('/voice'), icon: IconStar },
 ]
 
 export function AppShell() {
+  const { pathname } = useLocation()
+  const home = pathname === '/'
+
   return (
-    <div className="scene mx-auto min-h-dvh max-w-lg">
+    <div className={`scene mx-auto min-h-dvh max-w-lg ${home ? 'scene-home' : 'scene-cream'}`}>
       <div className="scene-sky" aria-hidden="true">
-        <span className="cloud left-[8%] top-6 w-24" />
-        <span className="cloud right-[6%] top-24 w-20" />
-        <span className="cloud bottom-28 left-[18%] w-16 opacity-80" />
-        <span className="confetti left-[12%] top-16 bg-[#ff8a3d]" />
-        <span className="confetti right-[18%] top-12 bg-[#7aa7ff]" />
-        <span className="confetti right-[10%] top-40 h-2 w-2 bg-[#ffc857]" />
-        <span className="confetti bottom-40 left-[8%] bg-[#ff9dcb]" />
-        <svg viewBox="0 0 24 24" className="sparkle absolute top-10 right-[28%] h-4 w-4 fill-[#ffc857]">
-          <path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" />
-        </svg>
-        <svg viewBox="0 0 24 24" className="sparkle absolute top-32 left-[22%] h-3 w-3 fill-[#7aa7ff]">
-          <path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" />
-        </svg>
+        {home ? (
+          <>
+            <span className="cloud left-[6%] top-16 w-28" />
+            <span className="cloud right-[4%] top-28 w-24" />
+            <span className="cloud left-[22%] top-[46%] w-20 opacity-80" />
+            <span className="confetti left-[14%] top-24 h-3 w-3 rotate-12 bg-[#ff8a3d]" />
+            <span className="confetti right-[16%] top-20 h-2.5 w-2.5 bg-[#7aa7ff]" />
+            <span className="confetti right-[22%] top-40 h-2 w-2 bg-[#ffc857]" />
+            <span className="confetti left-[10%] top-[38%] h-2.5 w-2.5 bg-[#ff9dcb]" />
+            <span className="confetti right-[12%] top-[42%] h-3 w-3 bg-[#b6f3d4]" />
+            <svg viewBox="0 0 24 24" className="sparkle absolute top-14 right-[30%] h-5 w-5 fill-[#ffe56a]">
+              <path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" />
+            </svg>
+            <svg viewBox="0 0 24 24" className="sparkle absolute top-36 left-[18%] h-4 w-4 fill-white">
+              <path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" />
+            </svg>
+            <svg viewBox="0 0 24 24" className="sparkle absolute top-[52%] right-[18%] h-3.5 w-3.5 fill-[#ffd0ea]">
+              <path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6Z" />
+            </svg>
+          </>
+        ) : (
+          <>
+            <span className="cloud left-[8%] top-8 w-20 opacity-70" />
+            <span className="confetti right-[12%] top-16 h-2 w-2 bg-[#ffc857]" />
+            <span className="confetti left-[16%] top-24 h-2 w-2 bg-[#ff9dcb]" />
+          </>
+        )}
       </div>
-      <main className="relative z-10 px-4 pt-5" style={{ paddingBottom: 'calc(6.5rem + env(safe-area-inset-bottom))' }}>
+      <main className="relative z-10 px-4 pt-4" style={{ paddingBottom: 'calc(7.2rem + env(safe-area-inset-bottom))' }}>
         <Outlet />
       </main>
-      <nav
-        className="fixed bottom-0 left-1/2 z-40 w-full max-w-lg -translate-x-1/2 bg-white/80 px-2 pt-2 backdrop-blur"
-        style={{ paddingBottom: 'calc(0.45rem + env(safe-area-inset-bottom))' }}
-        aria-label="主要页面"
-      >
-        <ul className="grid grid-cols-5">
-          {TABS.map((tab) => (
-            <li key={tab.to}>
-              <NavLink
-                to={tab.to}
-                end={tab.end}
-                className={({ isActive }) =>
-                  `flex min-h-14 flex-col items-center justify-center gap-0.5 text-sm font-extrabold ${
-                    isActive ? 'tab-active' : 'text-muted'
-                  }`
-                }
-              >
+      <nav className="tabbar" aria-label="主要页面">
+        {TABS.map((tab) => {
+          const on = tab.match(pathname)
+          return (
+            <NavLink key={tab.label} to={tab.to} className={on ? 'tab tab-on' : 'tab'} aria-current={on ? 'page' : undefined}>
+              <span className="tab-bubble">
                 <tab.icon />
-                {tab.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+              </span>
+              <span>{tab.label}</span>
+              <span className="tab-line" />
+            </NavLink>
+          )
+        })}
       </nav>
     </div>
   )

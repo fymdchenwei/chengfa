@@ -39,6 +39,20 @@ export function normalizeSpeechRate(value: unknown): number {
   return Math.round(clamped * 100) / 100
 }
 
+export function voiceBlurb(name: string): string {
+  const label = name.toLowerCase()
+  if (/tingting|meijia|ting-ting|female|女声/.test(label)) return '温柔的女声，适合跟读'
+  if (/sinji|child|kid|童声|小朋友/.test(label)) return '语调更活泼'
+  if (/male|男声|yunyang|kangkang/.test(label)) return '沉稳的男声'
+  return '这台设备的中文语音'
+}
+
+export function rateLabel(rate: number): string {
+  if (rate < 0.75) return '慢一点'
+  if (rate <= 1) return '刚刚好'
+  return '快一点'
+}
+
 export function formatSpeechRate(value: number): string {
   const rate = normalizeSpeechRate(value)
   const digits = Number.isInteger(rate) ? rate.toFixed(1) : String(rate)
@@ -167,7 +181,7 @@ export function speakChinese(text: string): boolean {
   return true
 }
 
-export function speakSequence(parts: readonly string[]): boolean {
+export function speakSequence(parts: readonly string[], onStep?: (index: number) => void): boolean {
   const lines = parts.filter((part) => part.trim() !== '')
   if (!canSpeak() || lines.length === 0) return false
   const synth = window.speechSynthesis
@@ -180,6 +194,7 @@ export function speakSequence(parts: readonly string[]): boolean {
       noteSpeechEnd(token)
       return
     }
+    onStep?.(index)
     const utter = prepareUtterance(lines[index] ?? '', synth)
     index += 1
     utter.onend = () => next()

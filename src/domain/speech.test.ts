@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   DEFAULT_SPEECH_RATE,
   formatSpeechRate,
+  rateLabel,
+  voiceBlurb,
   isChineseVoice,
   isSpeaking,
   normalizeSpeechRate,
@@ -76,5 +78,14 @@ describe('中文语音选择', () => {
     noteSpeechStart()
     noteSpeechStop()
     expect(isSpeaking()).toBe(false)
+  })
+
+  it('给声音和语速配上孩子能懂的说明', () => {
+    expect(voiceBlurb('Tingting')).toBe('温柔的女声，适合跟读')
+    expect(voiceBlurb('Sinji')).toBe('语调更活泼')
+    expect(voiceBlurb('其他')).toBe('这台设备的中文语音')
+    expect(rateLabel(0.6)).toBe('慢一点')
+    expect(rateLabel(0.8)).toBe('刚刚好')
+    expect(rateLabel(1.2)).toBe('快一点')
   })
 })
